@@ -1,0 +1,4 @@
+proxy-server/letsencrypt/live/
+proxy-server/letsencrypt/accounts/
+proxy-server/letsencrypt/credentials/
+proxy-server/letsencrypt/archive/

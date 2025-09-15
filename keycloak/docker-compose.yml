@@ -1,0 +1,59 @@
+version: '3'
+services:
+  postgres_srv:
+      image: postgres
+      container_name: keycloak-db-postgres
+      restart: unless-stopped
+      volumes:
+        - ./.data:/var/lib/postgresql/data
+      environment:
+        POSTGRES_DB: keycloak
+        POSTGRES_USER: keycloak
+        POSTGRES_PASSWORD: password
+      ports:
+        - "5432:5432"
+      networks:
+      #   - keycloak_net
+        keycloak_net:
+          ipv4_address: "10.2.0.8"
+  keycloak:
+      image: quay.io/keycloak/keycloak:18.0
+      container_name: keycloak
+      restart: unless-stopped
+      environment:
+        # KC_HOSTNAME_URL: "http://172.24.211.26:6005"
+        # KC_HOSTNAME_STRICT_HTTPS: "true" 
+        # KC_HTTP_ENABLED: "false"
+        # KC_PROXY: edge
+        # KC_DB: postgres
+        # KC_DB_PASSWORD: password
+        # KC_DB_USERNAME: keycloak
+        # KC_DB_SCHEMA : public
+        # KC_DB_URL_HOST : postgres_srv
+        # KC_DB_URL_DATABASE : keycloak
+        # KC_DB_URL: jdbc:postgresql://10.2.0.8:5430/keycloak
+        KC_HEALTH_ENABLED: true
+        KEYCLOAK_ADMIN: root
+        KEYCLOAK_ADMIN_PASSWORD: root
+      ports:
+        - 6005:8080
+        - 6006:8443
+      command:
+        # - "start --optimized --hostname-strict-backchannel=true"
+        - "start-dev"
+      volumes:
+      #  - ./themes/:/opt/keycloak/themes/
+       - ./conf/:/opt/keycloak/conf/
+      depends_on:
+        - postgres_srv
+      networks:
+        - keycloak_net
+        
+#Set Network for static IP
+networks:
+  keycloak_net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.2.0.0/16

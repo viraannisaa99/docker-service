@@ -1,0 +1,15 @@
+services:
+  api:
+    build:
+      context: .
+      target: dev
+    ports:
+      - "127.0.0.1:${HOST_PORT:-18080}:8080"
+    volumes:
+      - .:/app
+      - gocache:/go/pkg/mod
+    environment:
+      - GO_ENV=development
+    command: ["air","-c",".air.toml"]
+volumes:
+  gocache:

@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  wikijs:
+    image: ghcr.io/requarks/wiki:2
+    container_name: wikijs
+    ports:
+      - "3000:3000" 
+    environment:
+      - DB_TYPE=mssql
+      - DB_HOST=db-mssql
+      - DB_PORT=1433
+      - DB_USER=sa
+      - DB_PASS=vira16011999!
+      - DB_NAME=wiki
+      - ADMIN_EMAIL=vira@pcr.ac.id
+      - ADMIN_PASSWORD=vira@pcr.ac.id
+    networks:
+      - mssql_net
+
+networks:
+  mssql_net:
+    external:
+      name: mssql_mssql_net

@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+  php:
+    container_name: php8.2-apache
+    build:
+      context: .
+      args:
+        UID: ${UID:-1000}
+        GID: ${GID:-1000}
+    image: php8.2-apache-custom
+    ports:
+      - "80"
+    environment:
+      ACCEPT_EULA: "Y"
+      # XDEBUG_MODE: "off"  # aktifin kalau perlu debug
+    volumes:
+      - ./src:/var/www/html:cached
+      - ./_devdata/composer:/var/www/.composer
+    # Kalau masih ada permission issue ekstrem, boleh buka baris ini:
+    # user: "${UID:-1000}:${GID:-1000}"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost/ || exit 1"]
+      interval: 20s
+      timeout: 5s
+      retries: 5
+
+# Named volume optional; bind mount sudah cukup
+# volumes:
+#   composer-cache:

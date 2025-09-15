@@ -1,0 +1,14 @@
+name: myenv
+channels:
+  - defaults
+dependencies:
+  - python=3.9
+  - numpy
+  - pandas
+  - matplotlib
+  - scipy
+  - scikit-learn
+  - pip
+  - pip:
+    - streamlit
+  # Tambahkan dependencies lain yang Anda perlukan di sini

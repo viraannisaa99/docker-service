@@ -1,0 +1,30 @@
+version: '3'
+services:
+    mssql:
+        container_name: db-mssql
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        restart: always
+        ports:
+            - 41433:1433
+        expose:
+            - "41433"
+        environment:
+            - ACCEPT_EULA=Y
+            - SA_PASSWORD=vira16011999!
+        volumes: 
+            - mssql-volume:/var/opt/mssql
+        networks:
+            - "mssql_net"
+        mem_limit: 2G
+
+#Set Network for static IP
+networks:
+  mssql_net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.26.10.0/24
+
+volumes:
+    mssql-volume:

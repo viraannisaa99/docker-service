@@ -1,0 +1,25 @@
+version: "3.9"
+services:
+  rust-dev:
+    build: .
+    container_name: rust-dev
+    working_dir: /workspace
+    user: "${UID:-1000}:${GID:-1000}"   # hindari file owner root
+    stdin_open: true
+    tty: true
+    ports:
+      - "18088:8080"                     # akses web via http://localhost:18088
+    volumes:
+      - ../../docker-apps/rust-workspace:/workspace
+      - ../../docker-apps/rust-workspace/target:/workspace/target   # bind, ikut owner host
+      - cargo-registry:/usr/local/cargo/registry
+      - cargo-git:/usr/local/cargo/git
+    command: >
+      bash -lc "
+      chown -R ${UID:-1000}:${GID:-1000} /usr/local/cargo/registry /usr/local/cargo/git 2>/dev/null || true;
+      sleep infinity
+      "
+
+volumes:
+  cargo-registry:
+  cargo-git:

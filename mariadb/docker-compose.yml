@@ -1,0 +1,39 @@
+version: '3'
+services:
+    db:
+        container_name: db-mariadb
+        image: mariadb:10.6
+        restart: always
+        ports:
+            - 6607:3306
+        expose:
+            - "6607"
+        volumes:
+            - ./.mysql_data:/var/lib/mysql
+        environment:
+            - MARIADB_ROOT_PASSWORD=root
+        networks:
+            - "mariadb_net"
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        container_name: phpmyadmin
+        links:
+            - db
+        environment:
+            PMA_HOST: db
+            PMA_USER: "root"
+            PMA_PASSWORD: "root"
+            UPLOAD_LIMIT: "100M"
+        networks:
+            - mariadb_net
+        restart: always
+        ports:
+            - 6002:80
+#Set Network for static IP
+networks:
+  mariadb_net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.12.2.0/24

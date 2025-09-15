@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+  php80:
+    container_name: php8.0-apache
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: php8.0:latest
+    ports:
+      - "80"   # host:container → akses http://localhost:8080
+    environment:
+      ACCEPT_EULA: "Y"
+    volumes:
+      - ./src:/var/www/html:cached
+      - ./_devdata/composer:/var/www/.composer
+    restart: unless-stopped
